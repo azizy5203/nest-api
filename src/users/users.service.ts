@@ -1,10 +1,5 @@
 import { Injectable } from '@nestjs/common';
-
-type User = {
-  id: number;
-  name: string;
-  email: string;
-};
+import {type User} from "./users.types"
 
 @Injectable()
 export class UsersService {
@@ -21,4 +16,23 @@ export class UsersService {
   getAllUsers(): User[] {
     return this.users;
   }
+
+  getUserById(id:number): User|undefined{
+    return this.users.find(user=>user.id==id)
+  }
+
+  addUser(user:Omit<User,'id'>):User{
+    const addedUser = {id:this.users.length+1,...user}
+    this.users.push(addedUser)
+    return addedUser
+  }
+
+  updateUser(userUpdate:User):User|undefined{
+    const targetUserIndex = this.users.findIndex(user=>user.id==userUpdate.id)
+    if(targetUserIndex){
+      this.users.splice(targetUserIndex,1,userUpdate)
+      return this.users.find(user=>user.id==userUpdate.id)
+    }
+  }
+
 }
