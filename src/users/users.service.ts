@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import {type User} from "./users.types"
-import {CreateuserDto} from './dto/create-user.dto'
-
+import { type User } from './users.types';
+import { CreateuserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -19,22 +18,23 @@ export class UsersService {
     return this.users;
   }
 
-  getUserById(id:number): User|undefined{
-    return this.users.find(user=>user.id==id);
+  getUserById(id: number): User | undefined {
+    return this.users.find((user) => user.id == id);
   }
 
-  addUser(createuserDto:CreateuserDto):User{
-    const addedUser = {id:this.users.length+1,...createuserDto}
-    this.users.push(addedUser)
-    return addedUser
+  addUser(createuserDto: CreateuserDto): User {
+    const addedUser = { id: this.users.length + 1, ...createuserDto };
+    this.users.push(addedUser);
+    return addedUser;
   }
 
-  updateUser(userUpdate:User):User|undefined{
-    const targetUserIndex = this.users.findIndex(user=>user.id==userUpdate.id)
-    if(targetUserIndex){
-      this.users.splice(targetUserIndex,1,userUpdate)
-      return this.users.find(user=>user.id==userUpdate.id)
+  updateUser(userUpdate: User): User | undefined {
+    const targetUserIndex = this.users.findIndex(
+      (user) => user.id == userUpdate.id,
+    );
+    if (targetUserIndex) {
+      this.users.splice(targetUserIndex, 1, userUpdate);
+      return this.users.find((user) => user.id == userUpdate.id);
     }
   }
-
 }
