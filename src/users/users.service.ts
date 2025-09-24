@@ -1,17 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { type User } from './users.types';
-import { CreateuserDto } from './dto/create-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { UserStatus } from './users.types';
 
 @Injectable()
 export class UsersService {
   users: User[] = [
-    { id: 1, name: 'John', email: 'john@gmail.com' },
-    { id: 2, name: 'Jane', email: 'jane@gmail.com' },
-    { id: 3, name: 'Jim', email: 'jim@gmail.com' },
-    { id: 4, name: 'Jill', email: 'jill@gmail.com' },
-    { id: 5, name: 'Jack', email: 'jack@gmail.com' },
-    { id: 6, name: 'Jill', email: 'jill@gmail.com' },
-    { id: 7, name: 'Jack', email: 'jack@gmail.com' },
+    {
+      id: 1,
+      name: 'John',
+      email: 'john@gmail.com',
+      status: UserStatus.disabled,
+    },
+    { id: 2, name: 'Jane', email: 'jane@gmail.com', status: UserStatus.active },
+    { id: 3, name: 'Jim', email: 'jim@gmail.com', status: UserStatus.active },
+    { id: 4, name: 'Jill', email: 'jill@gmail.com', status: UserStatus.active },
+    { id: 5, name: 'Jack', email: 'jack@gmail.com', status: UserStatus.active },
+    { id: 6, name: 'Jill', email: 'jill@gmail.com', status: UserStatus.active },
+    { id: 7, name: 'Jack', email: 'jack@gmail.com', status: UserStatus.active },
   ];
 
   getAllUsers(): User[] {
@@ -22,19 +29,20 @@ export class UsersService {
     return this.users.find((user) => user.id == id);
   }
 
-  addUser(createuserDto: CreateuserDto): User {
+  addUser(createuserDto: Omit<CreateUserDto, 'id'>): User {
     const addedUser = { id: this.users.length + 1, ...createuserDto };
     this.users.push(addedUser);
     return addedUser;
   }
 
-  updateUser(userUpdate: User): User | undefined {
+  updateUser(updateUserDto: UpdateUserDto): User | undefined {
     const targetUserIndex = this.users.findIndex(
-      (user) => user.id == userUpdate.id,
+      (user) => user.id == updateUserDto.id,
     );
     if (targetUserIndex) {
-      this.users.splice(targetUserIndex, 1, userUpdate);
-      return this.users.find((user) => user.id == userUpdate.id);
+      const updatedUser = { ...this.users[targetUserIndex], ...updateUserDto };
+      this.users.splice(targetUserIndex, 1, updatedUser);
+      return this.users.find((user) => user.id == updateUserDto.id);
     }
   }
 }
