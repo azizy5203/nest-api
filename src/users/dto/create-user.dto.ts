@@ -8,11 +8,6 @@ import {
 import { UserStatus } from '../users.types';
 export class CreateUserDto {
   @IsNotEmpty()
-  @IsNumber()
-  @IsOptional()
-  id?: number;
-
-  @IsNotEmpty()
   name: string;
 
   @IsEmail()

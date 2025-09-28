@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { type User } from './users.types';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -15,18 +15,28 @@ export class UsersService {
     },
     { id: 2, name: 'Jane', email: 'jane@gmail.com', status: UserStatus.active },
     { id: 3, name: 'Jim', email: 'jim@gmail.com', status: UserStatus.active },
-    { id: 4, name: 'Jill', email: 'jill@gmail.com', status: UserStatus.active },
-    { id: 5, name: 'Jack', email: 'jack@gmail.com', status: UserStatus.active },
+    { id: 4, name: 'Jill', email: 'jill@gmail.com', status: UserStatus.hold },
+    { id: 5, name: 'Jack', email: 'jack@gmail.com', status: UserStatus.hold },
     { id: 6, name: 'Jill', email: 'jill@gmail.com', status: UserStatus.active },
     { id: 7, name: 'Jack', email: 'jack@gmail.com', status: UserStatus.active },
   ];
 
-  getAllUsers(): User[] {
+  getAllUsers(name?): User[] | NotFoundException {
+    if (name) {
+      const users = this.users.filter(
+        (u) => u.name.toLowerCase() == name.toLowerCase(),
+      );
+      if (users.length == 0)
+        return new NotFoundException(`Users with the name "${name}" not found`);
+      return users;
+    }
     return this.users;
   }
 
-  getUserById(id: number): User | undefined {
-    return this.users.find((user) => user.id == id);
+  getUserById(id: number): User | NotFoundException {
+    const user = this.users.find((user) => user.id == id);
+    if (!user) return new NotFoundException('User Not Found!');
+    return user;
   }
 
   addUser(createuserDto: Omit<CreateUserDto, 'id'>): User {
