@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -14,18 +13,33 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id  Int @id @default(autoincrement())
-  name  String
-  email String  @unique
-  status  Status
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  status    Status
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum Status {
   active
   disabled
+  hold
+}
+
+model Task {
+  id        Int        @id @default(autoincrement())
+  name      String
+  progress  Int        @default(0) @db.SmallInt
+  status    TaskStatus @default(new)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+enum TaskStatus {
+  new
+  active
+  completed
   hold
 }

@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { type User } from './users.types';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ListUsersDto } from './dto/list-users.dto';
 import { UserStatus } from './users.types';
 
 @Injectable()
@@ -21,16 +22,16 @@ export class UsersService {
     { id: 7, name: 'Jack', email: 'jack@gmail.com', status: UserStatus.active },
   ];
 
-  getAllUsers(name?): User[] | NotFoundException {
+  getAllUsers(name?: string): ListUsersDto | NotFoundException {
     if (name) {
       const users = this.users.filter(
         (u) => u.name.toLowerCase() == name.toLowerCase(),
       );
       if (users.length == 0)
         return new NotFoundException(`Users with the name "${name}" not found`);
-      return users;
+      return { Data: users, Total: users.length };
     }
-    return this.users;
+    return { Data: this.users, Total: this.users.length };
   }
 
   getUserById(id: number): User | NotFoundException {

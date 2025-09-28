@@ -13,7 +13,7 @@ import { UsersService } from './users.service';
 import { type User, UserStatus } from './users.types';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiTags, ApiResponse, ApiBody, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiBody, ApiQuery } from '@nestjs/swagger';
 
 @ApiTags('users') // groups endpoints in Swagger UI
 @Controller('users')
