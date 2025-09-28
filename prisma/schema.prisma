@@ -17,7 +17,7 @@ datasource db {
 
 model User {
   id  Int @id @default(autoincrement())
-  name  String  @unique
+  name  String
   email String  @unique
   status  Status
   createdAt DateTime  @default(now())
