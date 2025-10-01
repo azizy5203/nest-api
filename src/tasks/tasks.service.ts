@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { UpdateTaskDto } from './dto/update-task.dto';
 
 @Injectable()
 export class TasksService {
@@ -25,8 +26,11 @@ export class TasksService {
     return task;
   }
 
-  update(id: number, updateTaskDto: Prisma.TaskUpdateInput) {
-    return `This action updates a #${id} task ${updateTaskDto}`;
+  update(id: number, updateTaskDto: UpdateTaskDto) {
+    return this.databaseService.task.update({
+      where: { id },
+      data: updateTaskDto,
+    });
   }
 
   remove(id: number) {
