@@ -1,3 +1,4 @@
+import { writeFileSync } from 'fs';
 import { NestFactory } from '@nestjs/core';
 import { Logger } from '@nestjs/common';
 import { AppModule } from './app.module';
@@ -8,22 +9,23 @@ async function bootstrap() {
     logger: ['error', 'warn', 'log', 'debug', 'verbose'],
   });
 
+  app.enableCors();
+  app.setGlobalPrefix('api');
+
   // Swagger configuration
   const config = new DocumentBuilder()
     .setTitle('My API')
     .setDescription('API documentation for my project')
     .setVersion('1.0')
-    .addServer('/api')
     .build();
-  // .addBearerAuth() // if you use JWT
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('', app, document);
 
-  app.enableCors();
-  app.setGlobalPrefix('api');
+// Save schema to swagger.json file
+writeFileSync('./swagger.json', JSON.stringify(document, null, 2));
 
   await app.listen(process.env.PORT ?? 3000);
-  Logger.log('Application is running on: http://localhost:3000');
+  Logger.log('Swagger is running on: http://localhost:3000/docs');
 }
 bootstrap();

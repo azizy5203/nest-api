@@ -9,9 +9,10 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
-import { Prisma, TaskStatus } from '@prisma/client';
+import { TaskStatus } from '@prisma/client';
 import { ApiTags, ApiBody } from '@nestjs/swagger';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { UpdateTaskDto } from './dto/update-task.dto';
 
 @ApiTags('tasks')
 @Controller('tasks')
@@ -51,7 +52,7 @@ export class TasksController {
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() updateTaskDto: Prisma.TaskUpdateInput,
+    @Body() updateTaskDto: UpdateTaskDto,
   ) {
     return this.tasksService.update(+id, updateTaskDto);
   }

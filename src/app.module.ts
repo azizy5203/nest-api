@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -6,6 +6,7 @@ import { DatabaseModule } from './database/database.module';
 import { TasksModule } from './tasks/tasks.module';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { LoggerMiddleWare } from './common/logger.middleware';
 @Module({
   imports: [
     UsersModule,
@@ -33,4 +34,8 @@ import { APP_GUARD } from '@nestjs/core';
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule{
+  configure(consumer: MiddlewareConsumer) {
+      consumer.apply(LoggerMiddleWare).forRoutes('tasks')
+  }
+}
